@@ -83,7 +83,7 @@ public class ScheduleModel {
     }
 
     public void setAmountReserved(Integer amountReserved) {
-        this.amountReserved = amountReserved;
+        this.amountReserved = (amountReserved != null) ? amountReserved : 0;
     }
 
 }
