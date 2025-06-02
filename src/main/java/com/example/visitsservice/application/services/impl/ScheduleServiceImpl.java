@@ -1,7 +1,9 @@
 package com.example.visitsservice.application.services.impl;
 
 import com.example.visitsservice.application.dto.request.SaveScheduleRequest;
+import com.example.visitsservice.application.dto.request.SaveVisitRequest;
 import com.example.visitsservice.application.dto.response.SaveScheduleResponse;
+import com.example.visitsservice.application.dto.response.SaveVisitResponse;
 import com.example.visitsservice.application.dto.response.ScheduleResponse;
 import com.example.visitsservice.application.mappers.ScheduleDtoMapper;
 import com.example.visitsservice.application.services.ScheduleService;
@@ -33,5 +35,11 @@ public class ScheduleServiceImpl implements ScheduleService {
         MyPage<ScheduleModel> schedulePage = scheduleServicePort.getSchedules(filter, page, size, orderAsc);
         List<ScheduleResponse> scheduleResponseList = scheduleDtoMapper.modelListToResponseList(schedulePage.getContent());
         return new MyPage<>(scheduleResponseList, page, size, orderAsc, schedulePage.getTotalObjects());
+    }
+
+    @Override
+    public SaveVisitResponse saveVisit(SaveVisitRequest request) {
+        scheduleServicePort.saveVisit(scheduleDtoMapper.visitRequestToModel(request));
+        return new SaveVisitResponse(Constants.SAVE_VISIT_RESPONSE_MESSAGE, LocalDateTime.now());
     }
 }

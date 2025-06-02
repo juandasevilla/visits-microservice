@@ -6,6 +6,7 @@ import com.example.visitsservice.domain.usecases.ScheduleUseCase;
 import com.example.visitsservice.infrastructure.adapters.persistence.SchedulePersistenceAdapter;
 import com.example.visitsservice.infrastructure.mappers.ScheduleEntityMapper;
 import com.example.visitsservice.infrastructure.repositories.mysql.ScheduleRepository;
+import com.example.visitsservice.infrastructure.repositories.mysql.VisitRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -17,9 +18,10 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 public class BeanConfiguration {
     private final ScheduleRepository scheduleRepository;
     private final ScheduleEntityMapper scheduleEntityMapper;
+    private final VisitRepository visitRepository;
 
     public SchedulePersistencePort schedulePersistencePort() {
-        return new SchedulePersistenceAdapter(scheduleRepository, scheduleEntityMapper);
+        return new SchedulePersistenceAdapter(scheduleRepository, scheduleEntityMapper, visitRepository);
     }
 
     @Bean

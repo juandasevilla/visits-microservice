@@ -2,6 +2,7 @@ package com.example.visitsservice.infrastructure.repositories.mysql;
 
 import com.example.visitsservice.infrastructure.entities.ScheduleEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 
 import java.time.LocalDateTime;
@@ -10,10 +11,11 @@ import java.util.Optional;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.repository.query.Param;
-
+import org.springframework.transaction.annotation.Transactional;
 
 public interface ScheduleRepository extends JpaRepository<ScheduleEntity, Long> {
     Optional<ScheduleEntity> findById(Long id);
+    boolean existsByIdAndAmountReservedLessThan(Long id, Integer amountReserved);
     List<ScheduleEntity> findAll();
     ScheduleEntity save(ScheduleEntity schedule);
     void deleteById(Long id);
@@ -24,6 +26,7 @@ public interface ScheduleRepository extends JpaRepository<ScheduleEntity, Long> 
             Long userId,
             LocalDateTime initialDate,
             LocalDateTime finalDate);
+
 
     @Query("SELECT s FROM ScheduleEntity s WHERE " +
             "s.amountReserved < 2 AND " +
@@ -38,4 +41,13 @@ public interface ScheduleRepository extends JpaRepository<ScheduleEntity, Long> 
             @Param("initialDate") LocalDateTime initialDate,
             @Param("finalDate") LocalDateTime finalDate,
             Pageable pageable);
+
+
+    @Modifying
+    @Transactional
+    @Query("UPDATE ScheduleEntity s SET s.amountReserved = s.amountReserved + 1 WHERE s.id = :scheduleId")
+    void incrementAmountReserved(@Param("scheduleId") Long scheduleId);
+
+    @Query("SELECT s FROM ScheduleEntity s WHERE s.id = :scheduleId")
+    ScheduleEntity findScheduleById(@Param("scheduleId") Long scheduleId);
 }

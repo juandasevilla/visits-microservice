@@ -3,11 +3,13 @@ package com.example.visitsservice.infrastructure.adapters.persistence;
 
 import com.example.visitsservice.domain.filters.ScheduleFilter;
 import com.example.visitsservice.domain.model.ScheduleModel;
+import com.example.visitsservice.domain.model.VisitModel;
 import com.example.visitsservice.domain.ports.out.SchedulePersistencePort;
 import com.example.visitsservice.domain.utils.MyPage;
 import com.example.visitsservice.infrastructure.entities.ScheduleEntity;
 import com.example.visitsservice.infrastructure.mappers.ScheduleEntityMapper;
 import com.example.visitsservice.infrastructure.repositories.mysql.ScheduleRepository;
+import com.example.visitsservice.infrastructure.repositories.mysql.VisitRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -23,6 +25,7 @@ import java.util.List;
 public class SchedulePersistenceAdapter implements SchedulePersistencePort {
     private final ScheduleRepository scheduleRepository;
     private final ScheduleEntityMapper scheduleEntityMapper;
+    private final VisitRepository visitRepository;
 
     @Override
     public void saveSchedule(ScheduleModel scheduleModel) {
@@ -51,4 +54,22 @@ public class SchedulePersistenceAdapter implements SchedulePersistencePort {
         return new MyPage<>(scheduleModels, page, size, orderAsc, schedulePage.getTotalElements());
     }
 
+    @Override
+    @Transactional
+    public void saveVisit(VisitModel visitModel) {
+        Long scheduleId = visitModel.getSchedule().getId();
+        scheduleRepository.incrementAmountReserved(scheduleId);
+
+        visitRepository.save(scheduleEntityMapper.visitModelToEntity(visitModel));
+    }
+
+    @Override
+    public boolean existsScheduleWithAvailability(Long scheduleId) {
+        return scheduleRepository.existsByIdAndAmountReservedLessThan(scheduleId, 2);
+    }
+
+    @Override
+    public void updateSchedule(ScheduleModel scheduleModel) {
+        scheduleRepository.save(scheduleEntityMapper.modelToEntity(scheduleModel));
+    }
 }

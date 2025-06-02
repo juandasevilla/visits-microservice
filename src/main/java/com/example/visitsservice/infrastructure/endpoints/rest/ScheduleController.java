@@ -1,7 +1,9 @@
 package com.example.visitsservice.infrastructure.endpoints.rest;
 
 import com.example.visitsservice.application.dto.request.SaveScheduleRequest;
+import com.example.visitsservice.application.dto.request.SaveVisitRequest;
 import com.example.visitsservice.application.dto.response.SaveScheduleResponse;
+import com.example.visitsservice.application.dto.response.SaveVisitResponse;
 import com.example.visitsservice.application.dto.response.ScheduleResponse;
 import com.example.visitsservice.application.services.ScheduleService;
 import com.example.visitsservice.domain.filters.ScheduleFilter;
@@ -47,6 +49,11 @@ public class ScheduleController {
 
         ScheduleFilter filter = new ScheduleFilter(initialDate, finalDate, realStateId, userId);
         return ResponseEntity.ok(scheduleService.getSchedules(filter, page, size, orderAsc));
+    }
+
+    @PostMapping("/visit")
+    public ResponseEntity<SaveVisitResponse> saveVisit(@RequestBody SaveVisitRequest saveVisitRequest) {
+        return ResponseEntity.status(HttpStatus.CREATED).body(scheduleService.saveVisit(saveVisitRequest));
     }
 
 

@@ -48,7 +48,7 @@ public class SecurityConfig {
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
                         // Rutas específicas para este microservicio
-                        .requestMatchers("/api/v1/category/page", "/api/v1/location/page").permitAll()
+                        .requestMatchers("/api/v1/schedule/visit", "/api/v1/location/page").permitAll()
                         .requestMatchers(HttpMethod.GET, "/api/v1/schedule").permitAll()
                         .anyRequest().authenticated()
                 )

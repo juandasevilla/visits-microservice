@@ -86,4 +86,8 @@ public class ScheduleModel {
         this.amountReserved = (amountReserved != null) ? amountReserved : 0;
     }
 
+    public void  incrementReservation(){
+        this.amountReserved++;
+    }
+
 }
