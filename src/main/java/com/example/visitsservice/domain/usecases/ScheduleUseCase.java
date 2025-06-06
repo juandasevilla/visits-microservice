@@ -1,5 +1,6 @@
 package com.example.visitsservice.domain.usecases;
 
+import com.example.visitsservice.domain.exceptions.RealStateIsRequiredException;
 import com.example.visitsservice.domain.exceptions.ScheduleExistsException;
 import com.example.visitsservice.domain.exceptions.ScheduleRequiredException;
 import com.example.visitsservice.domain.filters.ScheduleFilter;
@@ -18,6 +19,14 @@ public class ScheduleUseCase implements ScheduleServicePort {
 
     @Override
     public void saveSchedule(ScheduleModel scheduleModel) {
+        boolean realStateExists = schedulePersistencePort.existsRealState(scheduleModel.getRealStateId());
+        System.out.println("Validando inmueble ID: " + scheduleModel.getRealStateId() + " - Existe: " + realStateExists);
+
+        if (!realStateExists) {
+            throw new RealStateIsRequiredException();
+        }
+
+
         if (schedulePersistencePort.existsOverlappingSchedule(scheduleModel)) {
             throw new ScheduleExistsException();
         }

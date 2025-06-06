@@ -12,4 +12,5 @@ public interface SchedulePersistencePort {
     void saveVisit(VisitModel visitModel);
     boolean existsScheduleWithAvailability(Long scheduleId);
     void updateSchedule(ScheduleModel scheduleModel);
+    boolean existsRealState(Long realStateId);
 }

@@ -10,8 +10,11 @@ import com.example.visitsservice.infrastructure.repositories.mysql.VisitReposito
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
+import com.example.visitsservice.infrastructure.adapters.client.RealStateClient;
+import org.springframework.context.annotation.Lazy;
 
 @Configuration
 @RequiredArgsConstructor
@@ -20,8 +23,13 @@ public class BeanConfiguration {
     private final ScheduleEntityMapper scheduleEntityMapper;
     private final VisitRepository visitRepository;
 
+    @Autowired
+    @Lazy
+    private RealStateClient realStateClient;
+
+    @Bean
     public SchedulePersistencePort schedulePersistencePort() {
-        return new SchedulePersistenceAdapter(scheduleRepository, scheduleEntityMapper, visitRepository);
+        return new SchedulePersistenceAdapter(scheduleRepository, scheduleEntityMapper, visitRepository,realStateClient);
     }
 
     @Bean

@@ -6,6 +6,7 @@ import com.example.visitsservice.domain.model.ScheduleModel;
 import com.example.visitsservice.domain.model.VisitModel;
 import com.example.visitsservice.domain.ports.out.SchedulePersistencePort;
 import com.example.visitsservice.domain.utils.MyPage;
+import com.example.visitsservice.infrastructure.adapters.client.RealStateClient;
 import com.example.visitsservice.infrastructure.entities.ScheduleEntity;
 import com.example.visitsservice.infrastructure.mappers.ScheduleEntityMapper;
 import com.example.visitsservice.infrastructure.repositories.mysql.ScheduleRepository;
@@ -26,6 +27,7 @@ public class SchedulePersistenceAdapter implements SchedulePersistencePort {
     private final ScheduleRepository scheduleRepository;
     private final ScheduleEntityMapper scheduleEntityMapper;
     private final VisitRepository visitRepository;
+    private final RealStateClient realStateClient;
 
     @Override
     public void saveSchedule(ScheduleModel scheduleModel) {
@@ -71,5 +73,10 @@ public class SchedulePersistenceAdapter implements SchedulePersistencePort {
     @Override
     public void updateSchedule(ScheduleModel scheduleModel) {
         scheduleRepository.save(scheduleEntityMapper.modelToEntity(scheduleModel));
+    }
+
+    @Override
+    public boolean existsRealState(Long realStateId) {
+        return  realStateClient.existsRealState(realStateId);
     }
 }

@@ -1,5 +1,10 @@
 package com.example.visitsservice.domain.model;
 
+import com.example.visitsservice.domain.exceptions.FinalDateException;
+import com.example.visitsservice.domain.exceptions.InitialDateException;
+import com.example.visitsservice.domain.exceptions.RealStateIsRequiredException;
+import com.example.visitsservice.domain.exceptions.UserIsRequiredException;
+
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
@@ -52,7 +57,7 @@ public class ScheduleModel {
 
     public void setInitialDate(LocalDateTime initialDate) {
         if (initialDate == null || initialDate.isBefore(LocalDateTime.now()) || initialDate.isAfter(LocalDateTime.now().plusDays(21))) {
-            throw new IllegalArgumentException("La fecha inicial no puede ser nula, anterior a hoy o posterior a 90 días");
+            throw new InitialDateException();
         }
         this.initialDate = initialDate;
     }
@@ -63,21 +68,21 @@ public class ScheduleModel {
                 finalDate.isAfter(LocalDateTime.now().plusDays(21)) ||
                 finalDate.isBefore(initialDate)) {
 
-            throw new IllegalArgumentException("La fecha final no puede ser nula, anterior a hoy, posterior a 21 días o anterior a la fecha inicial");
+            throw new FinalDateException();
         }
         this.finalDate = finalDate;
     }
 
     public void setRealStateId(Long realStateId) {
         if (realStateId == null) {
-            throw new IllegalArgumentException("El ID de la propiedad no puede ser nulo");
+            throw new RealStateIsRequiredException();
         }
         this.realStateId = realStateId;
     }
 
     public void setUserId(Long userId) {
         if (userId == null) {
-            throw new IllegalArgumentException("El ID del usuario no puede ser nulo");
+            throw new UserIsRequiredException();
         }
         this.userId = userId;
     }
